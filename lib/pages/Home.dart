@@ -1,24 +1,93 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:social_app_tut/components/Drawer.dart';
+import 'package:social_app_tut/components/MyListTile.dart';
+import 'package:social_app_tut/components/PostButton.dart';
+import 'package:social_app_tut/components/Textfield.dart';
+import 'package:social_app_tut/db/firestore.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  HomePage({super.key});
 
-  void logout() {
-    // log the user out
-    FirebaseAuth.instance.signOut();
+  // text controller
+  final TextEditingController controller = TextEditingController();
+  final FirestoreDatabase database = FirestoreDatabase();
+
+  void postMessage() {
+    if (controller.text.isNotEmpty) {
+      // post message
+      database.postMessage(controller.text);
+    }
+    controller.clear();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Home"),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        actions: [
-          IconButton(icon: const Icon(Icons.logout), onPressed: logout)
-        ],
-      ),
-    );
+        backgroundColor: Theme.of(context).colorScheme.background,
+        appBar: AppBar(
+          title: const Text("Posts"),
+          backgroundColor: Colors.transparent,
+          foregroundColor: Theme.of(context).colorScheme.inversePrimary,
+          elevation: 0,
+          centerTitle: true,
+        ),
+        drawer: const MyDrawer(),
+        body: Column(children: [
+          // textfield
+
+          Padding(
+              padding: const EdgeInsets.all(25),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: MyTextField(
+                      hintText: "What's on your mind?",
+                      obscureText: false,
+                      controller: controller,
+                    ),
+                  ),
+                  // post button
+                  PostButton(
+                    onTap: postMessage,
+                  )
+                ],
+              )),
+
+          // Posts
+          StreamBuilder(
+              stream: database.readPosts(),
+              builder: (context, snapshot) {
+                // show loading circle
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                }
+
+                // get all posts
+                final posts = snapshot.data!.docs;
+                // no data?
+                if (snapshot.data == null || posts.isEmpty) {
+                  return const Center(
+                      child: Padding(
+                          padding: EdgeInsets.all(25),
+                          child: Text("No posts yet")));
+                }
+
+                // show posts
+                return Expanded(
+                    child: ListView.builder(
+                        itemCount: posts.length,
+                        itemBuilder: (context, index) {
+                          final post = posts[index];
+
+                          // get data from each post
+                          String message = post['message'];
+                          String email = post['email'];
+                          Timestamp timestamp = post['timestamp'];
+
+                          // return as a lite tile
+                          return MyListTile(title: message, subtitle: email);                         }));
+              })
+        ]));
   }
 }
