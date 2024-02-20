@@ -5,14 +5,20 @@ import 'package:social_app_tut/auth/auth.dart';
 import 'package:social_app_tut/firebase_options.dart';
 import 'package:social_app_tut/pages/Home.dart';
 import 'package:social_app_tut/pages/Profile.dart';
+import 'package:social_app_tut/pages/Settings.dart';
 import 'package:social_app_tut/pages/Users.dart';
-import './theme/DarkMode.dart';
-import './theme/LightMode.dart';
+import './theme/ThemeProvider.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      child: const MyApp(),
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -23,14 +29,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AuthPage(),
-      theme: lightMode,
-      darkTheme: darkMode,
+      home: const AuthPage(),
+      theme: Provider.of<ThemeProvider>(context).themeData,
       routes: {
         '/login_register_page': (context) => const LoginOrRegister(),
         '/home_page': (context) =>  HomePage(),
         '/profile_page': (context) => ProfilPage(),
         '/users_page': (context) => const UsersPage(),
+        '/settings_page': (context) =>  SettingsPage(),
       },
     );
   }

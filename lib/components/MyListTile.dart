@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 class MyListTile extends StatelessWidget {
   final String title;
   final String subtitle;
-  const MyListTile({Key? key, required this.title, required this.subtitle})
-      : super(key: key);
+  const MyListTile({
+    Key? key,
+    required this.title,
+    required this.subtitle,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,12 +19,13 @@ class MyListTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
         ),
         child: ListTile(
-          title: Text(title),
+          title: Text(title,
+              style: TextStyle(
+                  color: Theme.of(context).colorScheme.inversePrimary)),
           subtitle: Text(subtitle,
               style: TextStyle(color: Theme.of(context).colorScheme.secondary)),
         ),
       ),
     );
-
   }
 }

@@ -18,7 +18,12 @@ class MyTextField extends StatelessWidget {
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
         ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Theme.of(context).colorScheme.secondary),
+        ),
         hintText: hintText,
+        hintStyle: TextStyle(color: Theme.of(context).colorScheme.secondary),
       ),
       obscureText: obscureText,
     );

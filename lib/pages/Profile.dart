@@ -70,7 +70,7 @@ class ProfilPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(25),
                           ),
                           padding: const EdgeInsets.all(25.0),
-                          child: const Icon(Icons.person, size: 64)),
+                          child: Icon(Icons.person, size: 64, color: Theme.of(context).colorScheme.inversePrimary)),
                       const SizedBox(height: 25),
 
                       // Username and Email

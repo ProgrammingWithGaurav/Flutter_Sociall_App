@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:social_app_tut/components/Drawer.dart';
 import 'package:social_app_tut/components/MyListTile.dart';
+import 'package:social_app_tut/components/Post.dart';
 import 'package:social_app_tut/components/PostButton.dart';
 import 'package:social_app_tut/components/Textfield.dart';
 import 'package:social_app_tut/db/firestore.dart';
@@ -80,13 +81,14 @@ class HomePage extends StatelessWidget {
                         itemBuilder: (context, index) {
                           final post = posts[index];
 
-                          // get data from each post
-                          String message = post['message'];
-                          String email = post['email'];
-                          Timestamp timestamp = post['timestamp'];
-
                           // return as a lite tile
-                          return MyListTile(title: message, subtitle: email);                         }));
+                          return Post(
+                            title: post['message'],
+                            subtitle: post['message'],
+                            likes: List<String>.from(post['likes'] ?? []),
+                            postId: post.id,
+                          );
+                        }));
               })
         ]));
   }
