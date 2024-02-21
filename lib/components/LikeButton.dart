@@ -24,7 +24,7 @@ class _LikeButtonState extends State<LikeButton> {
       child: Column(children: [
         Icon(
           widget.isLiked ? Icons.favorite : Icons.favorite_border,
-          size: 28,
+          size: 26,
           color: widget.isLiked
               ? Colors.red
               : Theme.of(context).colorScheme.secondary,

@@ -84,7 +84,7 @@ class HomePage extends StatelessWidget {
                           // return as a lite tile
                           return Post(
                             title: post['message'],
-                            subtitle: post['message'],
+                            subtitle: post['email'],
                             likes: List<String>.from(post['likes'] ?? []),
                             postId: post.id,
                           );
