@@ -5,6 +5,7 @@ import 'package:social_app_tut/components/Comment.dart';
 import 'package:social_app_tut/components/CommentButton.dart';
 import 'package:social_app_tut/components/LikeButton.dart';
 import 'package:social_app_tut/helper/HelperFunc.dart';
+import '../components/DeleteButton.dart';
 
 class Post extends StatefulWidget {
   final String title;
@@ -114,6 +115,44 @@ class _PostState extends State<Post> {
             ));
   }
 
+  // delete a post
+  void deletePost() {
+    // ask for confirmation
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text("Delete Post",
+            style:
+                TextStyle(color: Theme.of(context).colorScheme.inversePrimary)),
+        content: Text("Are you sure you want to delete this post?",
+            style: TextStyle(color: Theme.of(context).colorScheme.secondary)),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text("Cancel",
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.secondary)),
+          ),
+          TextButton(
+            onPressed: () {
+              // delete the post
+              FirebaseFirestore.instance
+                  .collection('Posts_Social_App')
+                  .doc(widget.postId)
+                  .delete();
+              Navigator.pop(context);
+            },
+            child: Text("Delete",
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.secondary)),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     int commentsCount = 0;
@@ -135,6 +174,9 @@ class _PostState extends State<Post> {
               subtitle: Text(widget.subtitle,
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.secondary)),
+              trailing: widget.subtitle == currentUser!.email
+                  ? DeleteButton(onPressed: deletePost)
+                  : null,
             ),
 
             // Comments
